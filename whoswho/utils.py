@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import sys
 import re
@@ -9,48 +8,35 @@ from difflib import SequenceMatcher
 from whoswho.config import STRIPPED_CHARACTERS
 
 
-def compare_name_component(list1, list2, settings, ratio=False):
+def compare_name_component(list1, list2, settings):
     """
     Compare a list of names from a name component based on settings
     """
-    if not list1[0] or not list2[0]:
-        result = not settings['required']
-        return result * 100 if ratio else result
+    print(list1, list2)
+    #First contribution to the aggregate is checking whether this component is entirely missing from one side
+    #List of different length are treated as equialane to absense of one component
+    absence_penalty = settings['absence_penalty']
+    if not list1[0] or not list2[0] or (len(list1) != len(list2)):
+        aggregate = 1 - absence_penalty
+        return aggregate
 
-    if len(list1) != len(list2):
-        return False
+    aggregate = 1
+    initials_weight = settings['initials_weight']
+    prefix_weight = settings['prefix_weight']
+    for i, n1 in enumerate(list1):
+        n2 = list2[i]
 
-    if ratio:
-        result = 0
-        for i, n1 in enumerate(list1):
-            n2 = list2[i]
+        #Match initials and apply weight to aggregate according to the result
+        if (len(n1) == 1 or len(n2) == 1):
+            aggregate *= initials_weight if equate_initial(n1, n2) else (1 - initials_weight)
+            continue
 
-            # If initials don't match, result for this item is 0
-            if (len(n1) == 1 or len(n2) == 1) and not equate_initial(n1, n2):
-                continue
+        #Try a prefix match, factored by ratio and a full match. Take the higher of the two.
+        prefix_match = prefix_weight if equate_prefix(n1, n2) else (1 - prefix_weight)
+        full_match = seq_ratio(n1, n2)
+        aggregate *= max((prefix_match, full_match))
 
-            if settings['allow_prefix']:
-                result += 100 if equate_prefix(n1, n2) else seq_ratio(n1, n2)
-            elif settings['allow_initials']:
-                result += 100 if equate_initial(n1, n2) else seq_ratio(n1, n2)
-            else:
-                result += seq_ratio(n1, n2)
-
-        result /= len(list1)
-
-    else:
-        result = True
-        for i, n1 in enumerate(list1):
-            n2 = list2[i]
-
-            if settings['allow_prefix']:
-                result &= equate_prefix(n1, n2)
-            elif settings['allow_initials']:
-                result &= equate_initial(n1, n2)
-            else:
-                result &= n1 == n2
-
-    return result
+    return aggregate
 
 
 def equate_initial(name1, name2):
@@ -114,7 +100,6 @@ def strip_punctuation(word):
     """
     Strips punctuation from name and lower cases it
     """
-
     return word.translate(STRIPPED_CHARACTERS).lower()
 
 
@@ -122,8 +107,7 @@ def seq_ratio(word1, word2):
     """
     Returns sequence match ratio for two words
     """
-    raw_ratio = SequenceMatcher(None, word1, word2).ratio()
-    return int(round(100 * raw_ratio))
+    return SequenceMatcher(None, word1, word2).ratio()
 
 
 def deep_update_dict(default, options):

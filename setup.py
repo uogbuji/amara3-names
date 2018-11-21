@@ -4,14 +4,13 @@ REQUIREMENTS = ['nameparser']
 TEST_REQUIREMENTS = ['nose']
 
 setup(
-    name='whoswho',
+    name='amara3.names',
     packages=find_packages(),
     version='0.1.2',
-    description='A simple python library for determining whether '
-                'two names describe the same person.',
-    author='Robert Liebowitz',
-    author_email='rliebz@gmail.com',
-    url='https://www.github.com/rliebz/whoswho',
+    description='Tools to handle human names (and organization names). Credit to https://www.github.com/rliebz/whoswho by Robert Liebowitz <rliebz@gmail.com>',
+    author='Uche Ogbuji',
+    author_email='uche@ogbuji.net',
+    url='http://uche.ogbuji.net',
     install_requires=REQUIREMENTS,
     tests_require=TEST_REQUIREMENTS,
     classifiers=(
@@ -19,12 +18,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Text Processing :: Linguistic',
     ),
-    keywords=['whoswho', 'name', 'match', 'parser']
+    keywords=['naturallanguage', 'name', 'match', 'parser']
 )

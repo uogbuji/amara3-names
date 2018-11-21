@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from nameparser import HumanName
 
@@ -9,6 +8,8 @@ from whoswho.utils import make_ascii, strip_punctuation, compare_name_component
 
 
 class Name(HumanName):
+    '''
+    '''
 
     def __init__(self, fullname):
         ascii_name = make_ascii(fullname)
@@ -50,8 +51,9 @@ class Name(HumanName):
         if not self._is_compatible_with(other):
             return 0
 
-        first, middle, last = self._compare_components(other, settings, True)
-        f_weight, m_weight, l_weight = self._determine_weights(other, settings)
+        first, middle, last = self._compare_components(other, settings)
+        #f_weight, m_weight, l_weight = self._determine_weights(other, settings)
+        f_weight, m_weight, l_weight = settings['first']['weight'], settings['middle']['weight'], settings['last']['weight']
         total_weight = f_weight + m_weight + l_weight
 
         result = (
@@ -102,60 +104,43 @@ class Name(HumanName):
 
         return len(unique_suffixes) < 2
 
-    def _compare_components(self, other, settings, ratio=False):
+    def _compare_components(self, other, settings):
         """Return comparison of first, middle, and last components"""
-
+        threshold = settings['threshold']
         first = compare_name_component(
             self.first_list,
             other.first_list,
             settings['first'],
-            ratio,
         )
 
         if settings['check_nickname']:
-            if first is False:
-                first = compare_name_component(
+            first = max(
+                compare_name_component(
                     self.nickname_list,
                     other.first_list,
                     settings['first'],
-                    ratio
-                ) or compare_name_component(
+                ),
+                compare_name_component(
                     self.first_list,
                     other.nickname_list,
                     settings['first'],
-                    ratio
-                )
-            elif ratio and first is not 100:
-                first = max(
-                    compare_name_component(
-                        self.nickname_list,
-                        other.first_list,
-                        settings['first'],
-                        ratio
-                    ),
-                    compare_name_component(
-                        self.first_list,
-                        other.nickname_list,
-                        settings['first'],
-                        ratio
-                    ),
-                    first,
-                )
+                ),
+                first,
+            )
 
         middle = compare_name_component(
             self.middle_list,
             other.middle_list,
             settings['middle'],
-            ratio,
         )
 
         last = compare_name_component(
             self.last_list,
             other.last_list,
             settings['last'],
-            ratio,
         )
 
+        print(first, middle, last)
         return first, middle, last
 
     def _determine_weights(self, other, settings):
