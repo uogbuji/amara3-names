@@ -4,15 +4,106 @@ import sys
 import re
 import unicodedata
 from difflib import SequenceMatcher
+import itertools
 
-from whoswho.config import STRIPPED_CHARACTERS
+from amara3.names.config import STRIPPED_CHARACTERS
 
+STICKY_NAME_PARTS = ['jr', 'sr', 'i', 'ii', 'iii', 'iv', 'iiii', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
+
+NORMALIZE_SPACE_PAT = re.compile(r'\s+', flags=re.MULTILINE)
+STRIP_TO_NORMALIZE_PAT = re.compile(r'[^\w, ]')
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return zip(a, b)
+
+
+def normalize(namestr):
+    '''
+    >>> from amara3.names.utils import normalize
+    >>> normalize('DiCamillo, Kate, Van Dusen, Chris')
+    'dicamillo, kate, van dusen, chris'
+    >>> normalize('King, Martin Luther, Jr.')
+    'king, martin luther, jr'
+    '''
+    normalized = unicodedata.normalize('NFKD', namestr)
+    normalized = NORMALIZE_SPACE_PAT.sub(' ', normalized)
+    normalized = STRIP_TO_NORMALIZE_PAT.sub('', normalized)
+    return normalized.lower()
+
+
+def namelist_possibilities(namestr):
+    '''
+    Warning: it is a good idea to call normalize on any string sent to this function
+    
+    >>> from amara3.names.utils import normalize, namelist_possibilities
+    >>> namelist_possibilities(normalize('DiCamillo, Kate, Van Dusen, Chris'))
+    [['dicamillo', 'kate', 'van dusen', 'chris'], ['dicamillo', 'kate', 'van dusen, chris'], ['dicamillo', 'kate, van dusen', 'chris'], ['dicamillo, kate', 'van dusen', 'chris']]
+    >>> namelist_possibilities(normalize('Krentz, Jayne Anne'))
+    [['krentz', 'jayne anne'], ['krentz, jayne anne']]
+    >>> namelist_possibilities(normalize('Uche Ogbuji'))
+    [['uche ogbuji']]
+    >>> namelist_possibilities(normalize('Ogbuji, Uche'))
+    [['ogbuji', 'uche'], ['ogbuji, uche']]
+    >>> namelist_possibilities(normalize('King, Martin Luther, Jr.'))
+    [['king', 'martin luther, jr'], ['king, martin luther, jr']]
+    >>> namelist_possibilities(normalize('Churchill, Winston, 1871-1947'))
+    [['churchill', 'winston'], ['churchill, winston']]
+    '''
+    possibilities = []
+    #Divvy up into comma-separated segments, then omit empties & ones e.g. from "1900-1990"
+    raw_segments = [ seg.strip() for seg in namestr.split(',') if seg.strip() ]
+    raw_segments = [ seg for seg in raw_segments if seg and not seg.isdigit() ]
+    segments = []
+    skip_next = False
+    
+    #Any sticky segments, e.g. "jr" or "III"? Stick them back
+    for pre, seg in pairwise(raw_segments):
+        if skip_next:
+            skip_next = False
+            continue
+        if seg in STICKY_NAME_PARTS:
+            segments.append(f'{pre}, {seg}')
+            skip_next = True
+        else:
+            segments.append(pre)
+    if raw_segments[-1] not in STICKY_NAME_PARTS: segments.append(raw_segments[-1])
+
+    #Special cases pairwise wouldn't cover
+    if len(segments) == 1: return [segments]
+    if len(segments) == 2: return [segments, [f'{segments[0]}, {segments[1]}']]
+
+    #Arrange permutations of name with each comma interpreted as inversion as well as separator
+    stems = []
+    for ix, (segthis, segnext) in enumerate(pairwise(segments)):
+        if not stems:
+            stems = [[segthis, None], [f'{segthis}, {segnext}']]
+            continue
+        if ix < len(segments) - 2:
+            new_stems = []
+            for stem in stems:
+                if stem[-1] == None:
+                    new_stems.append(stem[:-1] + [segthis, None])
+                    new_stems.append(stem[:-1] + [f'{segthis}, {segnext}'])
+                else:
+                    new_stems.append(stem + [segnext])
+            stems = new_stems
+        else:
+            for stem in stems:
+                if stem[-1] == None:
+                    possibilities.append(stem[:-1] + [segthis, segnext])
+                    possibilities.append(stem[:-1] + [f'{segthis}, {segnext}'])
+                else:
+                    possibilities.append(stem + [segnext])
+            
+    return possibilities
 
 def compare_name_component(list1, list2, settings):
     """
     Compare a list of names from a name component based on settings
     """
-    print(list1, list2)
     #First contribution to the aggregate is checking whether this component is entirely missing from one side
     #List of different length are treated as equialane to absense of one component
     absence_penalty = settings['absence_penalty']
@@ -80,20 +171,6 @@ def equate_nickname(name1, name2):
         return True
 
     return False
-
-
-def make_ascii(word):
-    """
-    Converts unicode-specific characters to their equivalent ascii
-    """
-    if sys.version_info < (3,0,0):
-        word = unicode(word)
-    else:
-        word = str(word)
-
-    normalized = unicodedata.normalize('NFKD', word)
-
-    return normalized.encode('ascii', 'ignore').decode('utf-8')
 
 
 def strip_punctuation(word):

@@ -9,8 +9,8 @@ Reluctantly use setuptools to get install_requires & long_description_content_ty
 '''
 
 import sys
-from setuptools import setup
-#from distutils.core import setup
+#from setuptools import setup
+from distutils.core import setup
 
 PROJECT_NAME = 'amara3.names'
 PROJECT_DESCRIPTION = 'Tools to handle human names (and organization names). Credit to https://www.github.com/rliebz/whoswho by Robert Liebowitz <rliebz@gmail.com> (MIT License)',
@@ -20,18 +20,13 @@ PROJECT_AUTHOR_EMAIL = 'uche@ogbuji.net'
 PROJECT_MAINTAINER = 'Zepheira'
 PROJECT_MAINTAINER_EMAIL = 'uche@zepheira.com'
 PROJECT_URL = 'http://zepheira.com/'
-PACKAGE_DIR = {'bibframe': 'lib'}
+PACKAGE_DIR = {'amara3.names': 'pylib'}
 PACKAGES = [
-    'bibframe',
-    'bibframe.reader',
-    'bibframe.writer',
-    'bibframe.contrib',
-    'bibframe.plugin',
+    'amara3.names',
+    'amara3.names.config',
 ]
 SCRIPTS = [
-    'exec/marc2bf',
-    'exec/versa2ttl',
-    'exec/marcbin2xml',
+#    'exec/marc2bf',
 ]
 
 CORE_REQUIREMENTS = [
@@ -58,7 +53,7 @@ CLASSIFIERS = [
 
 KEYWORDS=['naturallanguage', 'name', 'match', 'parser']
 
-version_file = 'lib/version.py'
+version_file = 'pylib/version.py'
 exec(compile(open(version_file, "rb").read(), version_file, 'exec'), globals(), locals())
 __version__ = '.'.join(version_info)
 
@@ -71,10 +66,15 @@ Requires Python 3.5+. To install:
     python setup.py install
 
 
-
 # Acknowledgments
 
-The seeds of the code was from [nameparser 1.0.2](https://pypi.org/project/nameparser/)
+The seeds of the code was from [whoswho 0.1.2](https://pypi.org/project/whoswho/)
+Also incorporates refactored code from [nameparser 1.0.2](https://pypi.org/project/nameparser/)
+
+See also:
+
+* https://github.com/gwu-libraries/namesparser
+
 
 '''
 

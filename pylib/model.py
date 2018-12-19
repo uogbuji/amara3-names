@@ -2,9 +2,10 @@
 
 from nameparser import HumanName
 
-from whoswho.config import (UNIQUE_SUFFIXES, MALE_TITLES, FEMALE_TITLES,
-                            EQUIVALENT_SUFFIXES)
-from whoswho.utils import make_ascii, strip_punctuation, compare_name_component
+from amara3.names.config import (UNIQUE_SUFFIXES, MALE_TITLES, FEMALE_TITLES,
+                                    EQUIVALENT_SUFFIXES)
+from amara3.names.utils import normalize, compare_name_component
+#from whoswho.utils import normalize, compare_name_component
 
 
 class Name(HumanName):
@@ -12,16 +13,15 @@ class Name(HumanName):
     '''
 
     def __init__(self, fullname):
-        ascii_name = make_ascii(fullname)
-        super(Name, self).__init__(ascii_name)
+        super(Name, self).__init__(fullname)
 
         # Format after parsing to preserve parsing logic
-        self.title = strip_punctuation(self.title)
-        self.first = strip_punctuation(self.first)
-        self.middle = strip_punctuation(self.middle)
-        self.last = strip_punctuation(self.last)
-        self.suffix = strip_punctuation(self.suffix)
-        self.nickname = strip_punctuation(self.nickname)
+        self.title = normalize(self.title)
+        self.first = normalize(self.first)
+        self.middle = normalize(self.middle)
+        self.last = normalize(self.last)
+        self.suffix = normalize(self.suffix)
+        self.nickname = normalize(self.nickname)
 
     def deep_compare(self, other, settings):
         """
@@ -140,7 +140,7 @@ class Name(HumanName):
             settings['last'],
         )
 
-        print(first, middle, last)
+        #print(first, middle, last)
         return first, middle, last
 
     def _determine_weights(self, other, settings):
