@@ -16,6 +16,18 @@ def ratio(fullname1, fullname2, strictness='default', options=None):
     :param string strictness: strictness settings to use
     :param dict options: custom strictness settings updates
     :return float: sequence ratio match (0-1.0)
+    
+    >>> from amara3.names import compare as namecompare
+    >>> namecompare.ratio('Uche Ogbuji', 'Uchenna Ogbuji')
+    0.8781818181818182
+    >>> namecompare.ratio('Uche Ogbuji', 'Uche Ogbuji')
+    1.0
+    >>> namecompare.ratio('Tom, Dick and Harry', 'Harry, Tom Dick')
+    0.43000000000000005
+    >>> namecompare.ratio('Tom, Dick, and Harry', 'Harry, Tom Dick') #One looks like a list
+    0.0
+    >>> namecompare.ratio('Uche Ogbuji', '') #One is empty
+    0.0
     """
 
     if options is not None:
@@ -27,8 +39,8 @@ def ratio(fullname1, fullname2, strictness='default', options=None):
     namelists1 = namelist_possibilities(normalize(fullname1))
     namelists2 = namelist_possibilities(normalize(fullname2))
     
-    #If either looks like a list of multiple names, return ratio of 0
-    if len(namelists1) > 2 or len(namelists2) > 2:
+    #If either is empty, or looks like a list of multiple names, return ratio of 0
+    if len(namelists1) == 0 or len(namelists2) == 0 or len(namelists1) > 2 or len(namelists2) > 2:
         return 0.0
 
     ratios = []

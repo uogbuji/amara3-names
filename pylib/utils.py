@@ -8,7 +8,7 @@ import itertools
 
 from amara3.names.config import STRIPPED_CHARACTERS
 
-STICKY_NAME_PARTS = ['jr', 'sr', 'i', 'ii', 'iii', 'iv', 'iiii', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
+STICKY_NAME_PARTS = ['jr', 'jnr', 'sr', 'snr', 'md', 'phd', 'esq', 'i', 'ii', 'iii', 'iv', 'iiii', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
 
 NORMALIZE_SPACE_PAT = re.compile(r'\s+', flags=re.MULTILINE)
 STRIP_TO_NORMALIZE_PAT = re.compile(r'[^\w, ]')
@@ -58,6 +58,9 @@ def namelist_possibilities(namestr):
     raw_segments = [ seg for seg in raw_segments if seg and not seg.isdigit() ]
     segments = []
     skip_next = False
+    
+    if not raw_segments:
+        return []
     
     #Any sticky segments, e.g. "jr" or "III"? Stick them back
     for pre, seg in pairwise(raw_segments):

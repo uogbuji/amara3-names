@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+import pytest #Consider also installing pytest_capturelog
 
-from nose.tools import *
-import unittest
-
-from whoswho.model import Name
+from amara3.names.model import Name
 
 
-class TestFullNames(unittest.TestCase):
+def test_warmup():
+    name = 'Rôbert E. Liebowitz'
 
-    def setUp(self):
-        self.name = 'Rôbert E. Liebowitz'
+    n = Name(name)
+    assert n.title_list == ['']
+    assert n.first_list == ['robert']
+    assert n.middle_list == ['e']
+    assert n.last_list == ['liebowitz']
+    assert n.suffix_list == ['']
+    assert n.nickname_list == ['']
 
-    def test_init(self):
-        n = Name(self.name)
-        assert_equal(n.title_list, [''])
-        assert_equal(n.first_list, ['robert'])
-        assert_equal(n.middle_list, ['e'])
-        assert_equal(n.last_list, ['liebowitz'])
-        assert_equal(n.suffix_list, [''])
-        assert_equal(n.nickname_list, [''])
