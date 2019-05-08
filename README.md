@@ -26,7 +26,7 @@ Usage
 In order to test two names, simply pass them in as strings or unicode.
 ```python
 >>> from whoswho import who
->>> who.match('Liebowitz, R.', u'Mr. Robert Evan Liebowitz')
+>>> who.match('Liebowitz, R.', 'Mr. Robert Evan Liebowitz')
 True
 >>> who.match('Robert Liebowitz, Jr.', 'Robert Liebowitz, Sr.')
 False

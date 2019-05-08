@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
+Highly recommend installing using `pip install -U .` not `python setup.py install`
+
+Uses pkgutil-style namespace package (Working on figuring out PEP 420)
+
 Note: careful not to conflate install_requires with requirements.txt
 
 https://packaging.python.org/discussions/install-requires-vs-requirements/
 
-Reluctantly use setuptools to get install_requires & long_description_content_type
+Reluctantly use setuptools for now to get install_requires & long_description_content_type
 '''
 
 import sys
@@ -13,7 +17,7 @@ import sys
 from distutils.core import setup
 
 PROJECT_NAME = 'amara3.names'
-PROJECT_DESCRIPTION = 'Tools to handle human names (and organization names). Credit to https://www.github.com/rliebz/whoswho by Robert Liebowitz <rliebz@gmail.com> (MIT License)',
+PROJECT_DESCRIPTION = 'Tools to handle human names (and organization names). Credit to https://www.github.com/rliebz/whoswho by Robert Liebowitz <rliebz@gmail.com> (MIT License)'
 PROJECT_LICENSE = 'License :: OSI Approved :: Apache Software License'
 PROJECT_AUTHOR = 'Uche Ogbuji'
 PROJECT_AUTHOR_EMAIL = 'uche@ogbuji.net'
@@ -30,7 +34,7 @@ SCRIPTS = [
 ]
 
 CORE_REQUIREMENTS = [
-    'amara3-iri',
+    'amara3.iri',
     'nameparser',
     'pytest',
 ]
