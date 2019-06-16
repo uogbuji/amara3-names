@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .config import (UNIQUE_SUFFIXES, MALE_TITLES, FEMALE_TITLES,
-                                    EQUIVALENT_SUFFIXES)
+#from .config import (UNIQUE_SUFFIXES, MALE_TITLES, FEMALE_TITLES,
+#                                    EQUIVALENT_SUFFIXES)
 from .utils import normalize, simple_compare, compound_compare, initial_compare
 from .kb import DK_AFFIXES
 
