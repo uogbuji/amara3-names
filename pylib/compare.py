@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from amara3.names.model import Name
+from amara3.names.model import human_name
 from amara3.names.config import SETTINGS
 from amara3.names.utils import deep_update_dict
 from amara3.names.utils import normalize, namelist_possibilities
@@ -48,9 +48,10 @@ def ratio(fullname1, fullname2, strictness='default', options=None):
         if len(ns1) != 1: continue
         for ns2 in [n for n in namelists2 if len(n) == 1]:
             if len(ns2) != 1: continue
-            n1 = Name(ns1[0])
-            n2 = Name(ns2[0])
+            n1 = human_name.parse(ns1[0])
+            n2 = human_name.parse(ns2[0])
             ratios.append(n1.ratio_deep_compare(n2, settings))
 
+    #print(namelists1, namelists2, ratios, settings)
     return max(ratios, default=0.0)
 

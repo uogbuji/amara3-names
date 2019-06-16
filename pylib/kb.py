@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+# kb.py
+'''
+Knowledgebase of naming conventions
 
+DK_ prefix is for default known sets
+'''
 
-MALE_TITLES = set([
+DK_MALE_TITLES = set([
     'sir',
     'king',
     'master',
@@ -29,7 +33,7 @@ MALE_TITLES = set([
 ])
 
 
-FEMALE_TITLES = set([
+DK_FEMALE_TITLES = set([
     'dame',
     'queen',
     'maid',
@@ -56,16 +60,9 @@ FEMALE_TITLES = set([
     "marchioness",
     'abbess',
 ])
-"""
-Sets of titles that are either exclusively male or exclusively female,
-which are subsets of nameparser's set of titles.
-
-Below are all unsorted titles. This set is kept to be tested against the full
-set of titles from nameparser in case it changes.
-"""
 
 # TODO: Gender-specific titles may still be in this list.
-GENDERLESS_TITLES = set([
+DK_GENDERLESS_TITLES = set([
     'dr',
     'doctor',
     'rev',
@@ -410,3 +407,162 @@ GENDERLESS_TITLES = set([
     'senior-judge',
     'mag/judge',
 ])
+
+# Taken from https://github.com/derek73/python-nameparser/blob/master/nameparser/config/prefixes.py
+# & https://github.com/derek73/python-nameparser/blob/master/nameparser/config/suffixes.py
+
+#: Name pieces that appear before a last name. Prefixes join to the piece
+#: that follows them to make one new piece. They can be chained together, e.g
+#: "von der" and "de la". Because they only appear in middle or last names,
+#: they also signifiy that all following name pieces should be in the same name
+#: part, for example, "von" will be joined to all following pieces that are not
+#: prefixes or suffixes, allowing recognition of double last names when they
+#: appear after a prefixes. So in "pennie von bergen wessels MD", "von" will
+#: join with all following name pieces until the suffix "MD", resulting in the
+#: correct parsing of the last name "von bergen wessels".
+DK_PREFIXES = set([
+    'abu',
+    'bin',
+    'bon',
+    'da',
+    'dal',
+    'de',
+    'degli',
+    'dei',
+    'del',
+    'dela',
+    'della',
+    'delle',
+    'delli',
+    'dello',
+    'der',
+    'di',
+    'dí',
+    'do',
+    'dos',
+    'du',
+    'ibn',
+    'la',
+    'le',
+    'san',
+    'santa',
+    'st',
+    'ste',
+    'van',
+    'vel',
+    'von',
+])
+
+DK_SUFFIXES = set([
+    'dr',
+    'esq',
+    'esquire',
+    'jr',
+    'jnr',
+    'junior',
+    'sr',
+    'snr',
+
+#Plus
+
+    'ae',
+    'afc',
+    'afm',
+    'arrc',
+    'bart',
+    'bem',
+    'bt',
+    'cb',
+    'cbe',
+    'cfp',
+    'cgc',
+    'cgm',
+    'ch',
+    'chfc',
+    'cie',
+    'clu',
+    'cmg',
+    'cpa',
+    'cpm',
+    'csi',
+    'csm',
+    'cvo',
+    'dbe',
+    'dcb',
+    'dcm',
+    'dcmg',
+    'dcvo',
+    'dds',
+    'dfc',
+    'dfm',
+    'dmd',
+    'do',
+    'dpm',
+    'dsc',
+    'dsm',
+    'dso',
+    'dvm',
+    'ed',
+    'erd',
+    'gbe',
+    'gc',
+    'gcb',
+    'gcie',
+    'gcmg',
+    'gcsi',
+    'gcvo',
+    'gm',
+    'idsm',
+    'iom',
+    'iso',
+    'jd',
+    'kbe',
+    'kcb',
+    'kcie',
+    'kcmg',
+    'kcsi',
+    'kcvo',
+    'kg',
+    'kp',
+    'kt',
+    'lg',
+    'lt',
+    'lvo',
+    'ma',
+    'mba',
+    'mbe',
+    'mc',
+    'md',
+    'mm',
+    'mp',
+    'msc'
+    'msm',
+    'mvo',
+    'obe',
+    'obi',
+    'om',
+    'phd',
+    'phr',
+    'pmp',
+    'qam',
+    'qc',
+    'qfsm',
+    'qgm',
+    'qpm',
+    'rd',
+    'rrc',
+    'rvm',
+    'sgm',
+    'td',
+    'ud',
+    'vc',
+    'vd',
+    'vrd',
+])
+
+DK_AFFIXES = DK_PREFIXES.union(DK_SUFFIXES)
+
+PARTICLE_SYNONYMS = [
+    ('jnr', 'jr', 'junior'),
+    ('snr', 'sr', 'senior'),
+]

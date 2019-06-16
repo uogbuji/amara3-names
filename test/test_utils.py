@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from nose.tools import *
 import unittest
 
-from from amara3.names import utils
+from amara3.names import utils
 
 
 class TestUtils(unittest.TestCase):

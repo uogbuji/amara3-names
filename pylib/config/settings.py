@@ -14,20 +14,17 @@ Global to setting:
 '''
 
 DEFAULT_SETTINGS = {
-    'first': {
-        'absence_penalty': 0.6,
+    'given': {
         'initials_weight': 0.5,
         'prefix_weight': 0.7,
         'weight': 3,
     },
-    'middle': {
-        'absence_penalty': 0.2,
+    'particle': {
         'initials_weight': 0.5,
         'prefix_weight': 0.7,
-        'weight': 2,
+        'weight': 1,
     },
-    'last': {
-        'absence_penalty': 0.9,
+    'familial': {
         'initials_weight': 0.5,
         'prefix_weight': 0.7,
         'weight': 5,
@@ -35,6 +32,8 @@ DEFAULT_SETTINGS = {
     'check_nickname': True,
     'threshold': 0.7,
 }
+
+# FIXME NEED TO UPDATE OTHER SETTINGS
 
 STRICT_SETTINGS = {
     'first': {
