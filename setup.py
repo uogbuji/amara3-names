@@ -36,6 +36,7 @@ SCRIPTS = [
 CORE_REQUIREMENTS = [
     'amara3.iri',
     'pytest',
+    'python-Levenshtein',
 ]
 
 # From http://pypi.python.org/pypi?%3Aaction=list_classifiers
