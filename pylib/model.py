@@ -59,7 +59,7 @@ class human_name:
             raw_segments = comma_sep_parts[0].split()
             if len(raw_segments) == 1:
                 # Single segment treated as given: "Pelé", "Madonna"
-                return [given(subparts[0])]
+                return [given(raw_segments[0])]
             for rseg in raw_segments:
                 if rseg in DK_AFFIXES:
                     segments.append(particle(rseg))
